@@ -11,21 +11,8 @@ const AdminLogin = () => {
 
     const handleLogin = (e) => {
         e.preventDefault()
-
-        // click counter logic
-        const attempts = parseInt(localStorage.getItem('admin_login_attempts') || '0')
-        const currentAttempt = attempts + 1
-        localStorage.setItem('admin_login_attempts', currentAttempt.toString())
-
-        // 1st CLICK ALWAYS FAILS (Requested logic)
-        if (currentAttempt === 1) {
-            setNotif({ show: true, msg: 'Invalid Admin Password', type: 'error' })
-            return
-        }
-
         if (password === '123456ha') {
             localStorage.setItem('admin_pass', password)
-            localStorage.setItem('admin_login_attempts', '0') // Reset on success
             setNotif({ show: true, msg: 'Access Granted!', type: 'success' })
             setTimeout(() => history.push('/ky1/panel'), 1000)
         } else {
