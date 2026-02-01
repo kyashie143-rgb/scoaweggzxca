@@ -37,7 +37,11 @@ const AdminPanel = () => {
             const data = await apiService.fetchAdminLogs(adminPass)
             if (data.success) setLogs(data.logs)
         } catch (e) {
-            history.push('/ky1/login')
+            console.error('Fetch error:', e)
+            setNotif({ show: true, msg: 'Session expired or Database error. Please log in again.', type: 'error' })
+            setTimeout(() => {
+                history.push('/ky1/login')
+            }, 3000) // Give user time to see the error
         }
     }
 
@@ -46,7 +50,7 @@ const AdminPanel = () => {
             const data = await apiService.fetchAdminUsers(adminPass)
             if (data.success) setUsers(data.users)
         } catch (e) {
-            console.error('Failed to fetch users')
+            console.error('Failed to fetch users:', e)
         }
     }
 
