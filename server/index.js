@@ -4,31 +4,28 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors({
-    origin: '*', // Allow all for local dev to avoid issues
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Database Connection
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'zomato_clone'
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'zomato_clone',
+    port: process.env.DB_PORT || 3306,
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : null
 });
 
 db.connect(err => {
     if (err) {
         console.error('SERVER ERROR: Could not connect to MySQL:', err.message);
-        console.log('TIP: Ensure "zomato_clone" database exists.');
     } else {
-        console.log('✅ Connected to MySQL database: zomato_clone');
+        console.log('✅ Connected to database');
     }
 });
 
