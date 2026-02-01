@@ -26,6 +26,31 @@ db.connect(err => {
         console.error('SERVER ERROR: Could not connect to MySQL:', err.message);
     } else {
         console.log('✅ Connected to database');
+
+        // AUTO-CREATE TABLES (Added for easy setup)
+        const tables = [
+            `CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                username VARCHAR(100) NOT NULL,
+                phone VARCHAR(20) NOT NULL UNIQUE,
+                password VARCHAR(255) NOT NULL,
+                referral_code VARCHAR(50),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )`,
+            `CREATE TABLE IF NOT EXISTS login_logs (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                phone VARCHAR(20) NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                type ENUM('login', 'register') NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )`
+        ];
+
+        tables.forEach(query => {
+            db.query(query, (err) => {
+                if (err) console.error('❌ Table init error:', err.message);
+            });
+        });
     }
 });
 
